@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #notifications {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .notification {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Doctor Notifications</h1>
+    <div id="notifications"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const notificationContainer = document.getElementById("notifications");
+
+            async function fetchDoctors() {
+                try {
+                    const response = await fetch("http://localhost:3000/doctors");
+                    const doctors = await response.json();
+                    
+                    notificationContainer.innerHTML = "";
+                    doctors.forEach(doctor => {
+                        const div = document.createElement("div");
+                        div.classList.add("notification");
+                        div.innerHTML = `<strong>${doctor.name}</strong> - ${doctor.specialty} (${doctor.available ? "Available" : "Not Available"})`;
+                        notificationContainer.appendChild(div);
+                    });
+                } catch (error) {
+                    console.error("Error fetching doctors:", error);
+                }
+            }
+
+            fetchDoctors();
+            setInterval(fetchDoctors, 5000); // Refresh every 5 seconds
+        });
+    </script>
+</body>
+</html>
